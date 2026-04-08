@@ -31,9 +31,6 @@ class CreateTaskNotification implements ShouldQueue
     public function handle(): void
     {
         $message = "User {$this->assigner->name} assigned you task: {$this->task->title}";
-        // firstOrCreate makes the job idempotent — if the queue retries or a
-        // duplicate job was dispatched before validation was enforced, we will
-        // not insert a second notification for the same assignment.
         Notification::firstOrCreate(
             [
                 'user_id' => $this->task->assigned_to,

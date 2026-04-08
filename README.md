@@ -32,7 +32,7 @@ The default configuration uses **SQLite** and a **database queue driver** — no
 Confirm your `.env` contains:
 
 ```env
-DB_CONNECTION=sqlite
+DB_CONNECTION=mysql
 QUEUE_CONNECTION=database
 ```
 

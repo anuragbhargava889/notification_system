@@ -11,6 +11,10 @@ use Illuminate\Http\JsonResponse;
 
 class TaskController extends Controller
 {
+    /**
+     * @param StoreTaskRequest $request
+     * @return JsonResponse
+     */
     public function store(StoreTaskRequest $request): JsonResponse
     {
         $task = Task::create($request->validated());
