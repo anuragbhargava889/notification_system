@@ -69,31 +69,13 @@ npm run dev                # Vite (only needed for frontend assets)
 
 ### 5. Start the queue worker
 
-Notifications are created asynchronously via a queued job. The queue worker **must be running** in a separate terminal, otherwise notifications will stay pending and never appear.
+Notifications are delivered asynchronously. The queue worker **must be running**, otherwise notifications will never appear.
 
 ```bash
 php artisan queue:listen
 ```
 
-You can verify pending jobs at any time:
-
-```bash
-php artisan tinker --execute="echo DB::table('jobs')->count() . ' pending jobs';"
-```
-
-To manually drain the queue without keeping a worker running (useful for one-off testing):
-
-```bash
-php artisan queue:work --once
-```
-
-If a job fails, check the `failed_jobs` table:
-
-```bash
-php artisan queue:failed
-```
-
-And retry all failed jobs:
+To retry failed jobs:
 
 ```bash
 php artisan queue:retry all
@@ -241,6 +223,16 @@ After the queue worker processes the job, Bob receives a notification:
 }
 ```
 
+Attempting to create a task with the same title for the same assignee returns `422`:
+```json
+{
+  "message": "This task has already been assigned to the selected user.",
+  "errors": {
+    "title": ["This task has already been assigned to the selected user."]
+  }
+}
+```
+
 ---
 
 ### Retrieve Notifications
@@ -299,6 +291,14 @@ curl -s -X POST http://localhost:8000/api/notifications/1/read \
 ```
 
 Attempting to mark another user's notification returns `403 Forbidden`.
+
+Attempting to mark an already-read notification returns `422`:
+```json
+{
+  "message": "Notification has already been read.",
+  "read_at": "2026-04-07T10:05:01.000000Z"
+}
+```
 
 ---
 
